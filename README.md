@@ -1,6 +1,6 @@
 # A2A HelloWorld Agent
 
-A self-contained A2A (Agent-to-Agent) HelloWorld agent designed for Appian connectivity demos. This agent can be deployed to Heroku and provides JSON-RPC endpoints for agent communication.
+A self-contained A2A (Agent-to-Agent) HelloWorld agent for connectivity demos. This agent can be deployed to Heroku and provides JSON-RPC endpoints for agent communication.
 
 ## Features
 
