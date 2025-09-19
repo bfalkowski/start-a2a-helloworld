@@ -8,7 +8,7 @@ import requests
 import json
 import sys
 
-def get_agent_card(base_url="https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com"):
+def get_agent_card(base_url):
     """Get the agent card from the deployed A2A agent"""
     try:
         response = requests.get(f"{base_url}/agent/card", timeout=10)
@@ -18,7 +18,7 @@ def get_agent_card(base_url="https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com")
         print(f"❌ Error fetching agent card: {e}")
         return None
 
-def get_agent_health(base_url="https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com"):
+def get_agent_health(base_url):
     """Get the agent health status"""
     try:
         response = requests.get(f"{base_url}/agent/health", timeout=10)
@@ -28,7 +28,7 @@ def get_agent_health(base_url="https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com
         print(f"❌ Error fetching agent health: {e}")
         return None
 
-def call_jsonrpc_method(method, params=None, base_url="https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com"):
+def call_jsonrpc_method(method, base_url, params=None):
     """Call a JSON-RPC method on the agent"""
     try:
         payload = {
@@ -50,12 +50,16 @@ def call_jsonrpc_method(method, params=None, base_url="https://a2a-helloworld-1d
         return None
 
 def main():
+    # Get URL from command line argument or use default
+    base_url = sys.argv[1] if len(sys.argv) > 1 else "https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com"
+    
     print("🤖 A2A HelloWorld Agent Card Fetcher")
-    print("=" * 40)
+    print(f"🌐 Testing agent at: {base_url}")
+    print("=" * 50)
     
     # Get agent card
     print("📋 Fetching agent card...")
-    agent_card = get_agent_card()
+    agent_card = get_agent_card(base_url)
     if agent_card:
         print("✅ Agent Card:")
         print(json.dumps(agent_card, indent=2))
@@ -63,20 +67,20 @@ def main():
         print("❌ Failed to get agent card")
         sys.exit(1)
     
-    print("\n" + "=" * 40)
+    print("\n" + "=" * 50)
     
     # Get health status
     print("💚 Checking agent health...")
-    health = get_agent_health()
+    health = get_agent_health(base_url)
     if health:
         print("✅ Health Status:")
         print(json.dumps(health, indent=2))
     
-    print("\n" + "=" * 40)
+    print("\n" + "=" * 50)
     
     # Test JSON-RPC greeting
     print("👋 Testing JSON-RPC greeting...")
-    greeting = call_jsonrpc_method("greeting")
+    greeting = call_jsonrpc_method("greeting", base_url)
     if greeting:
         print("✅ Greeting Response:")
         print(json.dumps(greeting, indent=2))

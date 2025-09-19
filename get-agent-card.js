@@ -6,13 +6,15 @@
 
 const https = require('https');
 
-const AGENT_URL = 'https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com';
+// Get URL from command line argument or use default
+const AGENT_URL = process.argv[2] || 'https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com';
 
 function makeRequest(path, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {
+        const url = new URL(AGENT_URL);
         const options = {
-            hostname: 'a2a-helloworld-1dd6ef1d53ae.herokuapp.com',
-            port: 443,
+            hostname: url.hostname,
+            port: url.port || 443,
             path: path,
             method: method,
             headers: {
@@ -93,17 +95,18 @@ async function testJsonRpcGreeting() {
 
 async function main() {
     console.log('🤖 A2A HelloWorld Agent Card Fetcher');
-    console.log('='.repeat(40));
+    console.log(`🌐 Testing agent at: ${AGENT_URL}`);
+    console.log('='.repeat(50));
     
     const agentCard = await getAgentCard();
     if (!agentCard) {
         process.exit(1);
     }
     
-    console.log('\n' + '='.repeat(40));
+    console.log('\n' + '='.repeat(50));
     await getAgentHealth();
     
-    console.log('\n' + '='.repeat(40));
+    console.log('\n' + '='.repeat(50));
     await testJsonRpcGreeting();
     
     console.log('\n✅ All tests completed successfully!');

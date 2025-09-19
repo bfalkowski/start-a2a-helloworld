@@ -67,7 +67,40 @@ The application automatically:
 
 ## Usage Examples
 
-### Agent Discovery
+### Quick Test Scripts
+
+The repository includes ready-to-use test scripts that can test any deployed agent:
+
+#### Bash Script (Most Comprehensive)
+```bash
+# Test with default URL
+./test-agent.sh
+
+# Test with custom URL
+./test-agent.sh https://your-agent.herokuapp.com
+```
+
+#### Python Script (Clean & Simple)
+```bash
+# Test with default URL
+python3 get-agent-card.py
+
+# Test with custom URL
+python3 get-agent-card.py https://your-agent.herokuapp.com
+```
+
+#### Node.js Script (No Dependencies)
+```bash
+# Test with default URL
+node get-agent-card.js
+
+# Test with custom URL
+node get-agent-card.js https://your-agent.herokuapp.com
+```
+
+### Manual API Testing
+
+#### Agent Discovery
 ```bash
 # Get agent information
 curl https://your-app.herokuapp.com/agent/card
@@ -76,7 +109,7 @@ curl https://your-app.herokuapp.com/agent/card
 curl https://your-app.herokuapp.com/agent/health
 ```
 
-### JSON-RPC Communication
+#### JSON-RPC Communication
 ```bash
 # Greeting method
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
@@ -118,6 +151,9 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
 │   └── RootResource.java         # Root endpoint
 ├── src/main/resources/
 │   └── application.properties    # Quarkus configuration
+├── test-agent.sh                 # Bash test script
+├── get-agent-card.py             # Python test script
+├── get-agent-card.js             # Node.js test script
 ├── pom.xml                       # Maven configuration
 ├── procfile                      # Heroku process definition
 ├── system.properties             # Java version specification
