@@ -1,1 +1,1 @@
-web: ./start-a2a-helloworld-heroku.sh
+web: java $JAVA_OPTS -jar target/quarkus-app/quarkus-run.jar
