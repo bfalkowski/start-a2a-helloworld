@@ -6,8 +6,15 @@
 
 const https = require('https');
 
-// Get URL from command line argument or use default
-const AGENT_URL = process.argv[2] || 'https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com';
+// Check if URL is provided
+if (process.argv.length < 3) {
+    console.error('❌ Error: Please provide the agent URL as a command line argument');
+    console.error(`Usage: ${process.argv[0]} ${process.argv[1]} <agent-url>`);
+    console.error(`Example: ${process.argv[0]} ${process.argv[1]} https://your-agent.herokuapp.com`);
+    process.exit(1);
+}
+
+const AGENT_URL = process.argv[2];
 
 function makeRequest(path, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {

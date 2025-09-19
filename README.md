@@ -73,28 +73,19 @@ The repository includes ready-to-use test scripts that can test any deployed age
 
 #### Bash Script (Most Comprehensive)
 ```bash
-# Test with default URL
-./test-agent.sh
-
-# Test with custom URL
+# Test agent (URL required)
 ./test-agent.sh https://your-agent.herokuapp.com
 ```
 
 #### Python Script (Clean & Simple)
 ```bash
-# Test with default URL
-python3 get-agent-card.py
-
-# Test with custom URL
+# Test agent (URL required)
 python3 get-agent-card.py https://your-agent.herokuapp.com
 ```
 
 #### Node.js Script (No Dependencies)
 ```bash
-# Test with default URL
-node get-agent-card.js
-
-# Test with custom URL
+# Test agent (URL required)
 node get-agent-card.js https://your-agent.herokuapp.com
 ```
 

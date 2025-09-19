@@ -3,8 +3,15 @@
 # A2A HelloWorld Agent Test Script
 # Tests the deployed agent endpoints
 
-# Default URL, can be overridden with command line argument
-AGENT_URL="${1:-https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com}"
+# Check if URL is provided
+if [ $# -eq 0 ]; then
+    echo "❌ Error: Please provide the agent URL as a command line argument"
+    echo "Usage: $0 <agent-url>"
+    echo "Example: $0 https://your-agent.herokuapp.com"
+    exit 1
+fi
+
+AGENT_URL="$1"
 
 echo "🤖 Testing A2A HelloWorld Agent at $AGENT_URL"
 echo "=================================================="

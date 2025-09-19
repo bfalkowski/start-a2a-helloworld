@@ -50,8 +50,14 @@ def call_jsonrpc_method(method, base_url, params=None):
         return None
 
 def main():
-    # Get URL from command line argument or use default
-    base_url = sys.argv[1] if len(sys.argv) > 1 else "https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com"
+    # Check if URL is provided
+    if len(sys.argv) < 2:
+        print("❌ Error: Please provide the agent URL as a command line argument")
+        print(f"Usage: {sys.argv[0]} <agent-url>")
+        print(f"Example: {sys.argv[0]} https://your-agent.herokuapp.com")
+        sys.exit(1)
+    
+    base_url = sys.argv[1]
     
     print("🤖 A2A HelloWorld Agent Card Fetcher")
     print(f"🌐 Testing agent at: {base_url}")
