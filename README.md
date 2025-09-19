@@ -65,11 +65,14 @@ The application automatically:
 - Enables CORS for cross-origin requests
 - Uses Java 17 runtime
 
-## Usage Examples
+## Testing
+
+The repository includes comprehensive test scripts and documentation:
+
+- **[TESTING.md](TESTING.md)** - Detailed explanation of what happens during testing
+- **Test Scripts** - Ready-to-use scripts for testing any deployed agent
 
 ### Quick Test Scripts
-
-The repository includes ready-to-use test scripts that can test any deployed agent:
 
 #### Bash Script (Most Comprehensive)
 ```bash
@@ -145,6 +148,7 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
 ├── test-agent.sh                 # Bash test script
 ├── get-agent-card.py             # Python test script
 ├── get-agent-card.js             # Node.js test script
+├── TESTING.md                    # Detailed testing documentation
 ├── pom.xml                       # Maven configuration
 ├── procfile                      # Heroku process definition
 ├── system.properties             # Java version specification
