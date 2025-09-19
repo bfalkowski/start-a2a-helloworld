@@ -1,0 +1,9 @@
+{
+    "name": "A2A HelloWorld Demo",
+    "description": "Self-contained A2A HelloWorld agent (JSON-RPC) for Appian connectivity demos.",
+    "keywords": ["a2a", "json-rpc", "java", "appian"],
+    "formation": { "web": { "quantity": 1, "size": "eco" } },
+    "buildpacks": [{ "url": "heroku/java" }],
+    "success_url": "/agent/health"
+  }
+  
