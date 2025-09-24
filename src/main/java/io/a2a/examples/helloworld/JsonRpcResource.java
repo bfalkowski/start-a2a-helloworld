@@ -21,6 +21,85 @@ public class JsonRpcResource {
 
         Object result;
         switch (method) {
+            // Standard A2A Protocol Methods
+            case "agent.discover":
+                result = Map.of(
+                    "name", "HelloWorld A2A Agent",
+                    "description", "A simple A2A agent for testing connections on Heroku",
+                    "version", "1.0.0",
+                    "protocolVersion", "0.3.0",
+                    "capabilities", Map.of(
+                        "streaming", false,
+                        "pushNotifications", false,
+                        "stateTransitionHistory", false
+                    ),
+                    "skills", java.util.List.of(
+                        Map.of("id", "greeting", "name", "Greeting", "description", "Returns a greeting message"),
+                        Map.of("id", "echo", "name", "Echo", "description", "Echoes back the provided parameters"),
+                        Map.of("id", "heroku-info", "name", "Heroku Info", "description", "Returns Heroku environment information")
+                    )
+                );
+                break;
+            case "agent.info":
+                result = Map.of(
+                    "name", "HelloWorld A2A Agent",
+                    "description", "A simple A2A agent for testing connections on Heroku",
+                    "version", "1.0.0",
+                    "url", "https://a2a-helloworld-1dd6ef1d53ae.herokuapp.com",
+                    "protocolVersion", "0.3.0"
+                );
+                break;
+            case "agent.getCapabilities":
+                result = Map.of(
+                    "streaming", false,
+                    "pushNotifications", false,
+                    "stateTransitionHistory", false,
+                    "supportedTransports", java.util.List.of("JSONRPC"),
+                    "supportedProtocols", java.util.List.of("A2A-0.3.0")
+                );
+                break;
+            case "agent.getSkills":
+                result = java.util.List.of(
+                    Map.of(
+                        "id", "greeting",
+                        "name", "Greeting",
+                        "description", "Returns a greeting message",
+                        "tags", java.util.List.of("greeting"),
+                        "examples", java.util.List.of("hello", "hi")
+                    ),
+                    Map.of(
+                        "id", "echo",
+                        "name", "Echo",
+                        "description", "Echoes back the provided parameters",
+                        "tags", java.util.List.of("echo"),
+                        "examples", java.util.List.of("echo test")
+                    ),
+                    Map.of(
+                        "id", "heroku-info",
+                        "name", "Heroku Info",
+                        "description", "Returns Heroku environment information",
+                        "tags", java.util.List.of("info", "heroku"),
+                        "examples", java.util.List.of("info")
+                    )
+                );
+                break;
+            case "agent.health":
+                result = Map.of(
+                    "status", "UP",
+                    "platform", "Heroku",
+                    "timestamp", System.currentTimeMillis(),
+                    "version", "1.0.0"
+                );
+                break;
+            case "agent.status":
+                result = Map.of(
+                    "status", "UP",
+                    "uptime", "running",
+                    "lastHealthCheck", System.currentTimeMillis(),
+                    "activeConnections", 0
+                );
+                break;
+            // Custom Methods
             case "greeting":
                 result = Map.of("message", "Hello from A2A HelloWorld Agent running on Heroku!");
                 break;
