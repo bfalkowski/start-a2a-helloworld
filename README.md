@@ -4,27 +4,37 @@ A self-contained A2A (Agent-to-Agent) HelloWorld agent for connectivity demos. T
 
 ## Features
 
-- **Agent Discovery**: REST endpoints for agent card and health checks
+- **A2A Protocol Compliance**: Full A2A (Agent-to-Agent) protocol support with proper agent card schema
+- **Agent Discovery**: REST endpoints for agent card and health checks following A2A standards
 - **JSON-RPC Communication**: Full JSON-RPC 2.0 support for agent-to-agent communication
 - **Heroku Ready**: Optimized for Heroku deployment with proper port binding and CORS
 - **Quarkus Framework**: Fast, lightweight Java framework for microservices
+- **A2A Java SDK**: Uses official A2A Java SDK for proper schema compliance
 
 ## Available Endpoints
 
-### Agent Discovery
+### A2A Agent Discovery
 - `GET /` - Root endpoint with agent information and available endpoints
-- `GET /agent/card` - Basic agent card information
+- `GET /agent` - A2A-compliant agent card (primary discovery endpoint)
 - `GET /agent/extendedCard` - Extended agent card information
 - `GET /agent/authenticatedExtendedCard` - Authenticated agent card information
 - `GET /agent/health` - Health check endpoint
 
 ### JSON-RPC Communication
-- `POST /jsonrpc` - JSON-RPC 2.0 endpoint
+- `POST /jsonrpc` - JSON-RPC 2.0 endpoint for A2A protocol methods
 
 #### Available JSON-RPC Methods:
 - `greeting` - Returns a hello message
 - `echo` - Echoes back the provided parameters
 - `heroku-info` - Returns Heroku environment information
+
+#### A2A Protocol Methods (via JSON-RPC):
+- `agent.discover` - Agent discovery (standard A2A method)
+- `agent.info` - Agent information (standard A2A method)
+- `agent.getCapabilities` - Agent capabilities (standard A2A method)
+- `agent.getSkills` - Available skills (standard A2A method)
+- `agent.health` - Health check (standard A2A method)
+- `agent.status` - Agent status (standard A2A method)
 
 ## Local Development
 
@@ -74,9 +84,9 @@ The repository includes comprehensive test scripts and documentation:
 
 ### Quick Test Scripts
 
-#### Bash Script (Most Comprehensive)
+#### Bash Script (A2A Protocol Testing)
 ```bash
-# Test agent (URL required)
+# Test agent using native A2A protocol methods (URL required)
 ./test-agent.sh https://your-agent.herokuapp.com
 ```
 
@@ -94,45 +104,55 @@ node get-agent-card.js https://your-agent.herokuapp.com
 
 ### Manual API Testing
 
-#### Agent Discovery
+#### A2A Agent Discovery
 ```bash
-# Get agent information
-curl https://your-app.herokuapp.com/agent/card
+# Get A2A-compliant agent card
+curl https://your-app.herokuapp.com/agent
 
 # Health check
 curl https://your-app.herokuapp.com/agent/health
 ```
 
-#### JSON-RPC Communication
+#### A2A Protocol Methods (JSON-RPC)
 ```bash
-# Greeting method
+# A2A Agent Discovery
+curl -X POST https://your-app.herokuapp.com/jsonrpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "agent.discover",
+    "params": {},
+    "id": 1
+  }'
+
+# A2A Agent Capabilities
+curl -X POST https://your-app.herokuapp.com/jsonrpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "agent.getCapabilities",
+    "params": {},
+    "id": 2
+  }'
+
+# Custom Greeting method
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc": "2.0",
     "method": "greeting",
     "params": {},
-    "id": 1
+    "id": 3
   }'
 
-# Echo method
+# Custom Echo method
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc": "2.0",
     "method": "echo",
     "params": {"message": "Hello World"},
-    "id": 2
-  }'
-
-# Heroku info method
-curl -X POST https://your-app.herokuapp.com/jsonrpc \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "method": "heroku-info",
-    "params": {},
-    "id": 3
+    "id": 4
   }'
 ```
 
@@ -162,6 +182,7 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
 - **Maven** - Build tool
 - **Jakarta REST** - REST API framework
 - **JSON-RPC 2.0** - Agent communication protocol
+- **A2A Java SDK 0.3.0.Alpha1** - Official A2A protocol implementation
 
 ## License
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A2A HelloWorld Agent Test Script
-# Tests the deployed agent endpoints
+# Tests the deployed agent using native A2A protocol methods
 
 # Check if URL is provided
 if [ $# -eq 0 ]; then
@@ -12,53 +12,69 @@ if [ $# -eq 0 ]; then
 fi
 
 AGENT_URL="$1"
+JSONRPC_URL="$AGENT_URL/jsonrpc"
 
 echo "🤖 Testing A2A HelloWorld Agent at $AGENT_URL"
+echo "Using native A2A protocol methods via JSON-RPC"
 echo "=================================================="
 
-# Test root endpoint
-echo "📋 Root endpoint (/):"
-curl -s "$AGENT_URL/" | jq '.' 2>/dev/null || curl -s "$AGENT_URL/"
+# Helper function to make JSON-RPC calls
+make_jsonrpc_call() {
+    local method="$1"
+    local params="$2"
+    local id="$3"
+    local description="$4"
+    
+    echo "$description:"
+    curl -s -X POST "$JSONRPC_URL" \
+      -H "Content-Type: application/json" \
+      -d "{\"jsonrpc\":\"2.0\",\"method\":\"$method\",\"params\":$params,\"id\":$id}" | jq '.' 2>/dev/null || \
+    curl -s -X POST "$JSONRPC_URL" \
+      -H "Content-Type: application/json" \
+      -d "{\"jsonrpc\":\"2.0\",\"method\":\"$method\",\"params\":$params,\"id\":$id}"
+    echo -e "\n"
+}
+
+# Test A2A agent card (via HTTP GET as per A2A spec)
+echo "🎴 A2A Agent Card:"
+echo "Getting agent card (A2A standard endpoint):"
+curl -s "$AGENT_URL/agent" | jq '.' 2>/dev/null || curl -s "$AGENT_URL/agent"
 echo -e "\n"
 
-# Test agent card
-echo "🎴 Agent Card (/agent/card):"
-curl -s "$AGENT_URL/agent/card" | jq '.' 2>/dev/null || curl -s "$AGENT_URL/agent/card"
-echo -e "\n"
+# Test A2A agent discovery
+echo "🔍 A2A Agent Discovery:"
+make_jsonrpc_call "agent.discover" "{}" "1" "Discovering agent capabilities"
 
-# Test health endpoint
-echo "💚 Health Check (/agent/health):"
-curl -s "$AGENT_URL/agent/health" | jq '.' 2>/dev/null || curl -s "$AGENT_URL/agent/health"
-echo -e "\n"
+# Test A2A agent info
+echo "ℹ️  A2A Agent Info:"
+make_jsonrpc_call "agent.info" "{}" "2" "Getting agent information"
 
-# Test JSON-RPC greeting
-echo "👋 JSON-RPC Greeting:"
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"greeting","params":{},"id":1}' | jq '.' 2>/dev/null || \
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"greeting","params":{},"id":1}'
-echo -e "\n"
+# Test A2A agent capabilities
+echo "🎯 A2A Agent Capabilities:"
+make_jsonrpc_call "agent.getCapabilities" "{}" "3" "Getting agent capabilities"
 
-# Test JSON-RPC echo
-echo "🔄 JSON-RPC Echo:"
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"echo","params":{"message":"Hello from test script!"},"id":2}' | jq '.' 2>/dev/null || \
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"echo","params":{"message":"Hello from test script!"},"id":2}'
-echo -e "\n"
+# Test A2A agent skills
+echo "🛠️  A2A Agent Skills:"
+make_jsonrpc_call "agent.getSkills" "{}" "4" "Getting available skills"
 
-# Test JSON-RPC heroku-info
-echo "☁️  JSON-RPC Heroku Info:"
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"heroku-info","params":{},"id":3}' | jq '.' 2>/dev/null || \
-curl -s -X POST "$AGENT_URL/jsonrpc" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"heroku-info","params":{},"id":3}'
-echo -e "\n"
+# Test A2A agent health
+echo "💚 A2A Agent Health:"
+make_jsonrpc_call "agent.health" "{}" "5" "Checking agent health"
 
-echo "✅ All tests completed!"
+# Test custom greeting method
+echo "👋 Custom Greeting Method:"
+make_jsonrpc_call "greeting" "{}" "6" "Testing greeting method"
+
+# Test custom echo method
+echo "🔄 Custom Echo Method:"
+make_jsonrpc_call "echo" "{\"message\":\"Hello from A2A test!\"}" "7" "Testing echo method"
+
+# Test custom heroku-info method
+echo "☁️  Custom Heroku Info Method:"
+make_jsonrpc_call "heroku-info" "{}" "8" "Testing heroku-info method"
+
+# Test A2A agent status
+echo "📊 A2A Agent Status:"
+make_jsonrpc_call "agent.status" "{}" "9" "Getting agent status"
+
+echo "✅ All A2A protocol tests completed!"
