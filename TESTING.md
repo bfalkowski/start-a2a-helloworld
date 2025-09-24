@@ -81,15 +81,39 @@ Content-Type: application/json
 ```json
 {
   "jsonrpc": "2.0",
-  "error": {
-    "message": "Method not found: agent.discover",
-    "code": -32601
-  },
-  "id": 1
+  "id": 1,
+  "result": {
+    "name": "HelloWorld A2A Agent",
+    "description": "A simple A2A agent for testing connections on Heroku",
+    "version": "1.0.0",
+    "protocolVersion": "0.3.0",
+    "capabilities": {
+      "streaming": false,
+      "pushNotifications": false,
+      "stateTransitionHistory": false
+    },
+    "skills": [
+      {
+        "id": "greeting",
+        "name": "Greeting",
+        "description": "Returns a greeting message"
+      },
+      {
+        "id": "echo",
+        "name": "Echo",
+        "description": "Echoes back the provided parameters"
+      },
+      {
+        "id": "heroku-info",
+        "name": "Heroku Info",
+        "description": "Returns Heroku environment information"
+      }
+    ]
+  }
 }
 ```
 
-**Why this matters:** Tests standard A2A protocol methods. In a full A2A implementation, this would return agent discovery information.
+**Why this matters:** This is the primary A2A discovery method that other agents use to understand this agent's capabilities and available skills.
 
 #### A2A Agent Capabilities (`agent.getCapabilities`)
 
@@ -112,17 +136,136 @@ Content-Type: application/json
 ```json
 {
   "jsonrpc": "2.0",
-  "error": {
-    "message": "Method not found: agent.getCapabilities",
-    "code": -32601
-  },
-  "id": 2
+  "id": 2,
+  "result": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "supportedTransports": ["JSONRPC"],
+    "supportedProtocols": ["A2A-0.3.0"]
+  }
 }
 ```
 
-**Why this matters:** Tests the A2A capability discovery protocol. In a full implementation, this would return detailed capability information.
+**Why this matters:** This method provides detailed capability information that other agents use to understand what this agent can do and how to communicate with it.
 
-### 3. Custom Agent Methods (JSON-RPC)
+#### A2A Agent Skills (`agent.getSkills`)
+
+**What it tests:** Available skills enumeration
+
+**Request:**
+```http
+POST https://your-agent.herokuapp.com/jsonrpc
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "agent.getSkills",
+  "params": {},
+  "id": 3
+}
+```
+
+**Expected Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": [
+    {
+      "id": "greeting",
+      "name": "Greeting",
+      "description": "Returns a greeting message",
+      "tags": ["greeting"],
+      "examples": ["hello", "hi"]
+    },
+    {
+      "id": "echo",
+      "name": "Echo",
+      "description": "Echoes back the provided parameters",
+      "tags": ["echo"],
+      "examples": ["echo test"]
+    },
+    {
+      "id": "heroku-info",
+      "name": "Heroku Info",
+      "description": "Returns Heroku environment information",
+      "tags": ["info", "heroku"],
+      "examples": ["info"]
+    }
+  ]
+}
+```
+
+**Why this matters:** This method lists all available skills with descriptions, tags, and examples that other agents can use.
+
+#### A2A Agent Health (`agent.health`)
+
+**What it tests:** Health status monitoring
+
+**Request:**
+```http
+POST https://your-agent.herokuapp.com/jsonrpc
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "agent.health",
+  "params": {},
+  "id": 4
+}
+```
+
+**Expected Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "result": {
+    "status": "UP",
+    "platform": "Heroku",
+    "timestamp": 1758683847892,
+    "version": "1.0.0"
+  }
+}
+```
+
+**Why this matters:** This method provides health status information that other agents use for monitoring and failover decisions.
+
+#### A2A Agent Status (`agent.status`)
+
+**What it tests:** Runtime status information
+
+**Request:**
+```http
+POST https://your-agent.herokuapp.com/jsonrpc
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "agent.status",
+  "params": {},
+  "id": 5
+}
+```
+
+**Expected Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "status": "UP",
+    "uptime": "running",
+    "lastHealthCheck": 1758683848756,
+    "activeConnections": 0
+  }
+}
+```
+
+**Why this matters:** This method provides runtime status information including uptime and connection metrics.
+
+### 4. Custom Agent Methods (JSON-RPC)
 
 The test script also tests the agent's custom methods that are actually implemented:
 
@@ -227,14 +370,16 @@ Content-Type: application/json
 
 ### Success Indicators
 - ✅ A2A agent card returns proper schema with all required fields
-- ✅ Standard A2A protocol methods return appropriate responses (even if not implemented)
+- ✅ All standard A2A protocol methods return proper responses with detailed information
 - ✅ Custom JSON-RPC methods work correctly
 - ✅ Agent card contains proper capabilities, skills, and protocol information
+- ✅ Agent discovery, capabilities, skills, health, and status methods all functional
 
 ### Expected Behavior
-- **A2A Protocol Methods**: May return "Method not found" errors (normal for simple demo)
+- **A2A Protocol Methods**: All return successful responses with detailed agent information
 - **Custom Methods**: Should return successful responses with proper data
 - **Agent Card**: Must contain all A2A-required fields for client compatibility
+- **Discovery Methods**: Provide comprehensive agent information for other agents
 
 ### Common Issues
 - ❌ **Connection Refused**: Agent not running or wrong URL

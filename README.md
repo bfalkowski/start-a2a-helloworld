@@ -29,12 +29,12 @@ A self-contained A2A (Agent-to-Agent) HelloWorld agent for connectivity demos. T
 - `heroku-info` - Returns Heroku environment information
 
 #### A2A Protocol Methods (via JSON-RPC):
-- `agent.discover` - Agent discovery (standard A2A method)
-- `agent.info` - Agent information (standard A2A method)
-- `agent.getCapabilities` - Agent capabilities (standard A2A method)
-- `agent.getSkills` - Available skills (standard A2A method)
-- `agent.health` - Health check (standard A2A method)
-- `agent.status` - Agent status (standard A2A method)
+- `agent.discover` - Agent discovery with capabilities and skills
+- `agent.info` - Basic agent information (name, version, URL, protocol)
+- `agent.getCapabilities` - Detailed capability information (streaming, transports, protocols)
+- `agent.getSkills` - Available skills with descriptions, tags, and examples
+- `agent.health` - Health status with timestamp and platform info
+- `agent.status` - Runtime status with uptime and connection info
 
 ## Local Development
 
@@ -115,7 +115,7 @@ curl https://your-app.herokuapp.com/agent/health
 
 #### A2A Protocol Methods (JSON-RPC)
 ```bash
-# A2A Agent Discovery
+# A2A Agent Discovery (returns full agent info with capabilities and skills)
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
   -H "Content-Type: application/json" \
   -d '{
@@ -125,7 +125,7 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
     "id": 1
   }'
 
-# A2A Agent Capabilities
+# A2A Agent Capabilities (returns streaming, transports, protocols)
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
   -H "Content-Type: application/json" \
   -d '{
@@ -135,6 +135,26 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
     "id": 2
   }'
 
+# A2A Agent Skills (returns available skills with descriptions)
+curl -X POST https://your-app.herokuapp.com/jsonrpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "agent.getSkills",
+    "params": {},
+    "id": 3
+  }'
+
+# A2A Agent Health (returns health status and platform info)
+curl -X POST https://your-app.herokuapp.com/jsonrpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "agent.health",
+    "params": {},
+    "id": 4
+  }'
+
 # Custom Greeting method
 curl -X POST https://your-app.herokuapp.com/jsonrpc \
   -H "Content-Type: application/json" \
@@ -142,17 +162,7 @@ curl -X POST https://your-app.herokuapp.com/jsonrpc \
     "jsonrpc": "2.0",
     "method": "greeting",
     "params": {},
-    "id": 3
-  }'
-
-# Custom Echo method
-curl -X POST https://your-app.herokuapp.com/jsonrpc \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "method": "echo",
-    "params": {"message": "Hello World"},
-    "id": 4
+    "id": 5
   }'
 ```
 
