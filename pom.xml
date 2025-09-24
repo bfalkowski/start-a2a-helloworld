@@ -41,7 +41,7 @@
     <dependency>
       <groupId>io.github.a2asdk</groupId>
       <artifactId>a2a-java-sdk-spec</artifactId>
-      <version>0.3.0.Beta1-SNAPSHOT</version>
+      <version>0.3.0.Alpha1</version>
     </dependency>
   </dependencies>
   <build>
